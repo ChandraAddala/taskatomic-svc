@@ -1,0 +1,25 @@
+subprojects {
+
+	apply plugin: 'scala'
+
+	repositories {
+		mavenCentral()
+		jcenter()
+	}
+
+	dependencies {
+	    compile 'org.scala-lang:scala-library:2.11.4'
+
+	    testCompile 'junit:junit:4.11'
+	    testCompile 'org.scalatest:scalatest_2.11:2.2.2'
+	}
+
+	group = 'com.taskatomic.svc'
+    version = '1.0-SNAPSHOT'
+    sourceCompatibility = 1.7
+}	
+	
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.2.1'
+}
