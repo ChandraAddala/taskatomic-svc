@@ -1,3 +1,40 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.h2database:h2:1.4.182'
+        classpath 'org.flywaydb:flyway-gradle-plugin:3.1'
+    }
+}
+
+apply plugin: 'flyway'
+
+flyway {
+    url = "jdbc:h2:file:${buildDir}/db/test/taskatomic-db;MODE=PostgreSQL;IGNORECASE=TRUE"
+    user = 'root'
+    locations = [
+            'sql'
+    ]
+}
+
 dependencies {
     compile project(':database')
+
+    compile 'joda-time:joda-time:2.6'
+    compile 'com.typesafe.slick:slick_2.10:2.1.0'
+    compile 'com.typesafe.slick:slick-codegen_2.10:2.1.0-RC3'
+    compile 'com.h2database:h2:1.4.182'
+    compile 'com.mchange:c3p0:0.9.5-pre10'
 }
+
+// Gradle plugin has dependency on testClasses which creates circular dependency if
+// we were to have flyway tasks dependsOn testClasses. This is a small workaround/hack.
+// https://github.com/flyway/flyway/issues/775
+project.afterEvaluate {
+    flywayClean.dependsOn -= testClasses
+    flywayMigrate.dependsOn = [processResources, processTestResources]
+}
+
+testClasses.dependsOn flywayClean
+testClasses.dependsOn flywayMigrate
