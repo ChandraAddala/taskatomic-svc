@@ -21,11 +21,23 @@ flyway {
 dependencies {
     compile project(':database')
 
+    compile 'org.scalatra:scalatra_2.10:2.3.0'
+    compile 'org.scalatra:scalatra-scalate_2.10:2.3.0'
+    compile 'org.scalatra:scalatra-json_2.10:2.3.0'
+    compile 'org.json4s:json4s-jackson_2.10:3.2.11'
+
+    compile 'org.eclipse.jetty:jetty-webapp:9.2.3.v20140905'
+    compile 'org.eclipse.jetty:jetty-servlet:9.2.3.v20140905'
+    compile 'javax.servlet:javax.servlet-api:3.0.1'
+
     compile 'joda-time:joda-time:2.6'
     compile 'com.typesafe.slick:slick_2.10:2.1.0'
     compile 'com.typesafe.slick:slick-codegen_2.10:2.1.0-RC3'
     compile 'com.h2database:h2:1.4.182'
     compile 'com.mchange:c3p0:0.9.5-pre10'
+
+    testCompile 'org.scalatest:scalatest_2.10:2.1.7'
+    testCompile 'org.scalatra:scalatra-scalatest_2.10:2.3.0'
 }
 
 // Gradle plugin has dependency on testClasses which creates circular dependency if

@@ -94,18 +94,18 @@ object DBTables {
   /** GetResult implicit for fetching UserRow objects using plain SQL queries */
   implicit def GetResultUserRow(implicit e0: GR[Option[Int]], e1: GR[Int], e2: GR[Option[String]]): GR[UserRow] = GR{
     prs => import prs._
-      UserRow.tupled((<<?[Int], <<[Int], <<?[String], <<?[String]))
+      UserRow.tupled((<<?[Int], <<[String], <<?[String], <<?[String]))
   }
   /** Table description of table user. Objects of this class serve as prototypes for rows in queries. */
   class User(_tableTag: Tag) extends Table[UserRow](_tableTag, "user") {
-    def * = (id, userId, firstName, lastName) <> (UserRow.tupled, UserRow.unapply)
+    def * = (id, handle, firstName, lastName) <> (UserRow.tupled, UserRow.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = (id, userId.?, firstName, lastName).shaped.<>({r=>import r._; _2.map(_=> UserRow.tupled((_1, _2.get, _3, _4)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = (id, handle.?, firstName, lastName).shaped.<>({r=>import r._; _2.map(_=> UserRow.tupled((_1, _2.get, _3, _4)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column id DBType(INTEGER) */
     val id: Column[Option[Int]] = column[Option[Int]]("id")
     /** Database column user_id DBType(INTEGER), PrimaryKey */
-    val userId: Column[Int] = column[Int]("user_id", O.PrimaryKey)
+    val handle: Column[String] = column[String]("handle", O.PrimaryKey)
     /** Database column first_name DBType(VARCHAR), Length(50,true) */
     val firstName: Column[Option[String]] = column[Option[String]]("first_name", O.Length(50,varying=true))
     /** Database column last_name DBType(VARCHAR), Length(30,true) */

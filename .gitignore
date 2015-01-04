@@ -4,6 +4,7 @@
 *.iws
 *.ipr
 out/
+logs/
 
 ## Gradle Stuff
 build

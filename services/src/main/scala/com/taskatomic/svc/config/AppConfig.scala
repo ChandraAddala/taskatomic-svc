@@ -1,4 +1,4 @@
-package com.rackspace.prefs.config
+package com.taskatomic.svc.config
 
 import com.typesafe.config.ConfigFactory
 import org.slf4j.LoggerFactory

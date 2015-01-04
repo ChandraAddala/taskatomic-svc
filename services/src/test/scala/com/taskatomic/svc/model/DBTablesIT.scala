@@ -21,15 +21,15 @@ class DBTablesIT extends FunSuite with BeforeAndAfter with BeforeAndAfterAll wit
   
   test ("Verify insertion of data into table User") {
 
-    val testUserId = 1
+    val testUserHandle = "test_user"
     
     db withDynSession {
-      User.map(user => (user.userId, user.firstName, user.lastName))
-          .insert(testUserId, Some("Jason"), Some("Borne"))
+      User.map(user => (user.handle, user.firstName, user.lastName))
+          .insert(testUserHandle, Some("Jason"), Some("Borne"))
     }
     
     val isUserPresent = db withDynSession {
-      User.filter(_.userId === testUserId).run.nonEmpty
+      User.filter(_.handle === testUserHandle).run.nonEmpty
     }
 
     assert(isUserPresent, "row not inserted in table User")
@@ -39,13 +39,13 @@ class DBTablesIT extends FunSuite with BeforeAndAfter with BeforeAndAfterAll wit
   test ("Verify insertion of data into table Project") {
 
     val testProjectName = "diwali_celeb"
-    val testUserId = 1
+    val testUserHandle = "test_user"
     
     db withDynSession {
-      User.map(user => (user.userId, user.firstName, user.lastName))
-        .insert( testUserId, Some("Jason"), Some("Borne"))
+      User.map(user => (user.handle, user.firstName, user.lastName))
+        .insert( testUserHandle, Some("Jason"), Some("Borne"))
       
-      val userRowId: Option[Int] = User.filter(_.userId === testUserId).map(_.id).run.head
+      val userRowId: Option[Int] = User.filter(_.handle === testUserHandle).map(_.id).run.head
       
       Project.map(project => (project.projectName, project.projectOwner))
           .insert(testProjectName, userRowId.get)
@@ -61,14 +61,14 @@ class DBTablesIT extends FunSuite with BeforeAndAfter with BeforeAndAfterAll wit
   test ("Verify insertion of data into table Task") {
 
     val testProjectName = "diwali_celeb"
-    val testUserId = 1
+    val testUserHandle = "test_user"
     val testTaskName1 = "bring_sweets"
     
     db withDynSession {
-      User.map(user => (user.userId, user.firstName, user.lastName))
-        .insert( testUserId, Some("Jason"), Some("Borne"))
+      User.map(user => (user.handle, user.firstName, user.lastName))
+        .insert( testUserHandle, Some("Jason"), Some("Borne"))
 
-      val userRowId: Option[Int] = User.filter(_.userId === testUserId).map(_.id).run.head
+      val userRowId: Option[Int] = User.filter(_.handle === testUserHandle).map(_.id).run.head
 
       Project.map(project => (project.projectName, project.projectOwner))
         .insert(testProjectName, userRowId.get)
@@ -89,17 +89,17 @@ class DBTablesIT extends FunSuite with BeforeAndAfter with BeforeAndAfterAll wit
   test ("Verify assigning multiple tasks to a project") {
 
     val testProjectName = "diwali_celeb"
-    val testUserId = 1
+    val testUserHandle = "test_user"
     val testTaskName1 = "bring_sweets"
     val testTaskName2 = "bring_crackers"
 
     var projectRowId: Option[Int] = None
     
     db withDynSession {
-      User.map(user => (user.userId, user.firstName, user.lastName))
-        .insert( testUserId, Some("Jason"), Some("Borne"))
+      User.map(user => (user.handle, user.firstName, user.lastName))
+        .insert(testUserHandle, Some("Jason"), Some("Borne"))
 
-      val userRowId: Option[Int] = User.filter(_.userId === testUserId).map(_.id).run.head
+      val userRowId: Option[Int] = User.filter(_.handle === testUserHandle).map(_.id).run.head
 
       Project.map(project => (project.projectName, project.projectOwner))
         .insert(testProjectName, userRowId.get)
