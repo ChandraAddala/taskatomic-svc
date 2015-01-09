@@ -11,7 +11,7 @@ import org.joda.time.DateTime
   *  @param created Database column created DBType(TIMESTAMP)
   *  @param updated Database column updated DBType(TIMESTAMP)
   *  @param percentageComplete Database column percentage_complete DBType(DECIMAL) */
-case class TaskRow(id: Option[Int], 
+case class Task(id: Option[Int],
                    taskName: String, 
                    projectId: Int, 
                    createdBy: Int, 

@@ -8,7 +8,7 @@ import org.joda.time.DateTime
   *  @param projectOwner Database column project_owner DBType(INTEGER)
   *  @param created Database column created DBType(TIMESTAMP)
   *  @param updated Database column updated DBType(TIMESTAMP) */
-case class ProjectRow(id: Option[Int], 
+case class Project(id: Option[Int],
                       projectName: String, 
                       projectOwner: Int, 
                       created: Option[DateTime], 

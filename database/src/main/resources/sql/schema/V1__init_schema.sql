@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS "user";
 CREATE TABLE "user"
 (
   "id" integer DEFAULT nextval('user_id_seq') UNIQUE,
-  "user_id" integer PRIMARY KEY, -- unique user id
+  "handle" VARCHAR PRIMARY KEY, -- unique user id
   "first_name" character varying(50),
   "last_name" character varying(30)
 );

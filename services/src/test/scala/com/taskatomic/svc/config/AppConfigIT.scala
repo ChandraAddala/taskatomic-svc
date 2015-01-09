@@ -1,6 +1,6 @@
-package com.rackspace.prefs.model.config
+package com.taskatomic.svc.config
 
-import com.rackspace.prefs.config.AppConfig
+
 import org.scalatest.FunSuite
 
 class AppConfigIT extends FunSuite {

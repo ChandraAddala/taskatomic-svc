@@ -17,15 +17,15 @@ object DBTables {
   )
 
   /** GetResult implicit for fetching ProjectRow objects using plain SQL queries */
-  implicit def GetResultProjectRow(implicit e0: GR[Option[Int]], e1: GR[String], e2: GR[Int], e3: GR[Option[DateTime]]): GR[ProjectRow] = GR{
+  implicit def GetResultProjectRow(implicit e0: GR[Option[Int]], e1: GR[String], e2: GR[Int], e3: GR[Option[DateTime]]): GR[Project] = GR{
     prs => import prs._
-      ProjectRow.tupled((<<?[Int], <<[String], <<[Int], <<?[DateTime], <<?[DateTime]))
+      Project.tupled((<<?[Int], <<[String], <<[Int], <<?[DateTime], <<?[DateTime]))
   }
   /** Table description of table project. Objects of this class serve as prototypes for rows in queries. */
-  class Project(_tableTag: Tag) extends Table[ProjectRow](_tableTag, "project") {
-    def * = (id, projectName, projectOwner, created, updated) <> (ProjectRow.tupled, ProjectRow.unapply)
+  class ProjectTableDescription(_tableTag: Tag) extends Table[Project](_tableTag, "project") {
+    def * = (id, projectName, projectOwner, created, updated) <> (Project.tupled, Project.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = (id, projectName.?, projectOwner.?, created, updated).shaped.<>({r=>import r._; _2.map(_=> ProjectRow.tupled((_1, _2.get, _3.get, _4, _5)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = (id, projectName.?, projectOwner.?, created, updated).shaped.<>({r=>import r._; _2.map(_=> Project.tupled((_1, _2.get, _3.get, _4, _5)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column id DBType(INTEGER) */
     val id: Column[Option[Int]] = column[Option[Int]]("id")
@@ -42,24 +42,24 @@ object DBTables {
     val pk = primaryKey("CONSTRAINT_E", (projectName, projectOwner))
 
     /** Foreign key referencing User (database name CONSTRAINT_ED) */
-    lazy val userFk = foreignKey("CONSTRAINT_ED", projectOwner, User)(r => r.id.get, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Restrict)
+    lazy val userFk = foreignKey("CONSTRAINT_ED", projectOwner, UserTable)(r => r.id.get, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Restrict)
 
     /** Uniqueness Index over (id) (database name CONSTRAINT_INDEX_ED) */
     val index1 = index("CONSTRAINT_INDEX_ED", id, unique=true)
   }
   /** Collection-like TableQuery object for table Project */
-  lazy val Project = new TableQuery(tag => new Project(tag))
+  lazy val ProjectTable = new TableQuery(tag => new ProjectTableDescription(tag))
 
   /** GetResult implicit for fetching TaskRow objects using plain SQL queries */
-  implicit def GetResultTaskRow(implicit e0: GR[Option[Int]], e1: GR[String], e2: GR[Int], e3: GR[Option[DateTime]], e4: GR[Option[scala.math.BigDecimal]]): GR[TaskRow] = GR{
+  implicit def GetResultTaskRow(implicit e0: GR[Option[Int]], e1: GR[String], e2: GR[Int], e3: GR[Option[DateTime]], e4: GR[Option[scala.math.BigDecimal]]): GR[Task] = GR{
     prs => import prs._
-      TaskRow.tupled((<<?[Int], <<[String], <<[Int], <<[Int], <<[Int], <<?[DateTime], <<?[DateTime], <<?[scala.math.BigDecimal]))
+      Task.tupled((<<?[Int], <<[String], <<[Int], <<[Int], <<[Int], <<?[DateTime], <<?[DateTime], <<?[scala.math.BigDecimal]))
   }
   /** Table description of table task. Objects of this class serve as prototypes for rows in queries. */
-  class Task(_tableTag: Tag) extends Table[TaskRow](_tableTag, "task") {
-    def * = (id, taskName, projectId, createdBy, assignedTo, created, updated, percentageComplete) <> (TaskRow.tupled, TaskRow.unapply)
+  class TaskTableDescription(_tableTag: Tag) extends Table[Task](_tableTag, "task") {
+    def * = (id, taskName, projectId, createdBy, assignedTo, created, updated, percentageComplete) <> (Task.tupled, Task.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = (id, taskName.?, projectId.?, createdBy.?, assignedTo.?, created, updated, percentageComplete).shaped.<>({r=>import r._; _2.map(_=> TaskRow.tupled((_1, _2.get, _3.get, _4.get, _5.get, _6, _7, _8)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = (id, taskName.?, projectId.?, createdBy.?, assignedTo.?, created, updated, percentageComplete).shaped.<>({r=>import r._; _2.map(_=> Task.tupled((_1, _2.get, _3.get, _4.get, _5.get, _6, _7, _8)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column id DBType(INTEGER) */
     val id: Column[Option[Int]] = column[Option[Int]]("id")
@@ -82,30 +82,30 @@ object DBTables {
     val pk = primaryKey("CONSTRAINT_3", (taskName, projectId))
 
     /** Foreign key referencing Project (database name CONSTRAINT_363) */
-    lazy val projectFk = foreignKey("CONSTRAINT_363", projectId, Project)(r => r.id.get, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Restrict)
+    lazy val projectFk = foreignKey("CONSTRAINT_363", projectId, ProjectTable)(r => r.id.get, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Restrict)
     /** Foreign key referencing User (database name CONSTRAINT_3635) */
-    lazy val userFk2 = foreignKey("CONSTRAINT_3635", createdBy, User)(r => r.id.get, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Restrict)
+    lazy val userFk2 = foreignKey("CONSTRAINT_3635", createdBy, UserTable)(r => r.id.get, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Restrict)
     /** Foreign key referencing User (database name CONSTRAINT_36358) */
-    lazy val userFk3 = foreignKey("CONSTRAINT_36358", assignedTo, User)(r => r.id.get, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Restrict)
+    lazy val userFk3 = foreignKey("CONSTRAINT_36358", assignedTo, UserTable)(r => r.id.get, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Restrict)
   }
   /** Collection-like TableQuery object for table Task */
-  lazy val Task = new TableQuery(tag => new Task(tag))
+  lazy val TaskTable = new TableQuery(tag => new TaskTableDescription(tag))
 
   /** GetResult implicit for fetching UserRow objects using plain SQL queries */
-  implicit def GetResultUserRow(implicit e0: GR[Option[Int]], e1: GR[Int], e2: GR[Option[String]]): GR[UserRow] = GR{
+  implicit def GetResultUserRow(implicit e0: GR[Option[Int]], e1: GR[Int], e2: GR[Option[String]]): GR[User] = GR{
     prs => import prs._
-      UserRow.tupled((<<?[Int], <<[Int], <<?[String], <<?[String]))
+      User.tupled((<<?[Int], <<[String], <<?[String], <<?[String]))
   }
   /** Table description of table user. Objects of this class serve as prototypes for rows in queries. */
-  class User(_tableTag: Tag) extends Table[UserRow](_tableTag, "user") {
-    def * = (id, userId, firstName, lastName) <> (UserRow.tupled, UserRow.unapply)
+  class UserTableDescription(_tableTag: Tag) extends Table[User](_tableTag, "user") {
+    def * = (id, handle, firstName, lastName) <> (User.tupled, User.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = (id, userId.?, firstName, lastName).shaped.<>({r=>import r._; _2.map(_=> UserRow.tupled((_1, _2.get, _3, _4)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = (id, handle.?, firstName, lastName).shaped.<>({r=>import r._; _2.map(_=> User.tupled((_1, _2.get, _3, _4)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column id DBType(INTEGER) */
     val id: Column[Option[Int]] = column[Option[Int]]("id")
     /** Database column user_id DBType(INTEGER), PrimaryKey */
-    val userId: Column[Int] = column[Int]("user_id", O.PrimaryKey)
+    val handle: Column[String] = column[String]("handle", O.PrimaryKey)
     /** Database column first_name DBType(VARCHAR), Length(50,true) */
     val firstName: Column[Option[String]] = column[Option[String]]("first_name", O.Length(50,varying=true))
     /** Database column last_name DBType(VARCHAR), Length(30,true) */
@@ -115,6 +115,6 @@ object DBTables {
     val index1 = index("CONSTRAINT_INDEX_3", id, unique=true)
   }
   /** Collection-like TableQuery object for table User */
-  lazy val User = new TableQuery(tag => new User(tag))
+  lazy val UserTable = new TableQuery(tag => new UserTableDescription(tag))
   
 }
