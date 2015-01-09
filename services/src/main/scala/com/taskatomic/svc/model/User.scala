@@ -5,7 +5,7 @@ package com.taskatomic.svc.model
   *  @param handle Database column user_id DBType(INTEGER), PrimaryKey
   *  @param firstName Database column first_name DBType(VARCHAR), Length(50,true)
   *  @param lastName Database column last_name DBType(VARCHAR), Length(30,true) */
-case class UserRow(id: Option[Int], 
+case class User(id: Option[Int],
                    handle: String,
                    firstName: Option[String], 
                    lastName: Option[String])

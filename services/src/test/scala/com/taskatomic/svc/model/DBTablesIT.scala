@@ -24,12 +24,12 @@ class DBTablesIT extends FunSuite with BeforeAndAfter with BeforeAndAfterAll wit
     val testUserHandle = "test_user"
     
     db withDynSession {
-      User.map(user => (user.handle, user.firstName, user.lastName))
+      UserTable.map(user => (user.handle, user.firstName, user.lastName))
           .insert(testUserHandle, Some("Jason"), Some("Borne"))
     }
     
     val isUserPresent = db withDynSession {
-      User.filter(_.handle === testUserHandle).run.nonEmpty
+      UserTable.filter(_.handle === testUserHandle).run.nonEmpty
     }
 
     assert(isUserPresent, "row not inserted in table User")
@@ -42,17 +42,17 @@ class DBTablesIT extends FunSuite with BeforeAndAfter with BeforeAndAfterAll wit
     val testUserHandle = "test_user"
     
     db withDynSession {
-      User.map(user => (user.handle, user.firstName, user.lastName))
+      UserTable.map(user => (user.handle, user.firstName, user.lastName))
         .insert( testUserHandle, Some("Jason"), Some("Borne"))
       
-      val userRowId: Option[Int] = User.filter(_.handle === testUserHandle).map(_.id).run.head
+      val userRowId: Option[Int] = UserTable.filter(_.handle === testUserHandle).map(_.id).run.head
       
-      Project.map(project => (project.projectName, project.projectOwner))
+      ProjectTable.map(project => (project.projectName, project.projectOwner))
           .insert(testProjectName, userRowId.get)
     }
 
     val isProjectPresent = db withDynSession {
-      Project.filter(_.projectName === testProjectName).run.nonEmpty
+      ProjectTable.filter(_.projectName === testProjectName).run.nonEmpty
     }
 
     assert(isProjectPresent, "row not inserted in table Project")
@@ -65,22 +65,22 @@ class DBTablesIT extends FunSuite with BeforeAndAfter with BeforeAndAfterAll wit
     val testTaskName1 = "bring_sweets"
     
     db withDynSession {
-      User.map(user => (user.handle, user.firstName, user.lastName))
+      UserTable.map(user => (user.handle, user.firstName, user.lastName))
         .insert( testUserHandle, Some("Jason"), Some("Borne"))
 
-      val userRowId: Option[Int] = User.filter(_.handle === testUserHandle).map(_.id).run.head
+      val userRowId: Option[Int] = UserTable.filter(_.handle === testUserHandle).map(_.id).run.head
 
-      Project.map(project => (project.projectName, project.projectOwner))
+      ProjectTable.map(project => (project.projectName, project.projectOwner))
         .insert(testProjectName, userRowId.get)
       
-      val projectRowId: Option[Int] = Project.filter(_.projectName === testProjectName).map(_.id).run.head
+      val projectRowId: Option[Int] = ProjectTable.filter(_.projectName === testProjectName).map(_.id).run.head
       
-      Task.map(task => (task.taskName, task.projectId, task.createdBy, task.assignedTo, task.percentageComplete))
+      TaskTable.map(task => (task.taskName, task.projectId, task.createdBy, task.assignedTo, task.percentageComplete))
         .insert(testTaskName1, projectRowId.get, userRowId.get, userRowId.get, Some(0.0))
     }
 
     val isTaskPresent = db withDynSession {
-      Task.filter(_.taskName === testTaskName1).run.nonEmpty
+      TaskTable.filter(_.taskName === testTaskName1).run.nonEmpty
     }
 
     assert(isTaskPresent, "row not inserted in table task")
@@ -96,25 +96,25 @@ class DBTablesIT extends FunSuite with BeforeAndAfter with BeforeAndAfterAll wit
     var projectRowId: Option[Int] = None
     
     db withDynSession {
-      User.map(user => (user.handle, user.firstName, user.lastName))
+      UserTable.map(user => (user.handle, user.firstName, user.lastName))
         .insert(testUserHandle, Some("Jason"), Some("Borne"))
 
-      val userRowId: Option[Int] = User.filter(_.handle === testUserHandle).map(_.id).run.head
+      val userRowId: Option[Int] = UserTable.filter(_.handle === testUserHandle).map(_.id).run.head
 
-      Project.map(project => (project.projectName, project.projectOwner))
+      ProjectTable.map(project => (project.projectName, project.projectOwner))
         .insert(testProjectName, userRowId.get)
 
-      projectRowId = Project.filter(_.projectName === testProjectName).map(_.id).run.head
+      projectRowId = ProjectTable.filter(_.projectName === testProjectName).map(_.id).run.head
 
-      Task.map(task => (task.taskName, task.projectId, task.createdBy, task.assignedTo, task.percentageComplete))
+      TaskTable.map(task => (task.taskName, task.projectId, task.createdBy, task.assignedTo, task.percentageComplete))
         .insert(testTaskName1, projectRowId.get, userRowId.get, userRowId.get, Some(0.0))
       
-      Task.map(task => (task.taskName, task.projectId, task.createdBy, task.assignedTo, task.percentageComplete))
+      TaskTable.map(task => (task.taskName, task.projectId, task.createdBy, task.assignedTo, task.percentageComplete))
         .insert(testTaskName2, projectRowId.get, userRowId.get, userRowId.get, Some(0.0))
     }
     
     val numberOfTasks = db withDynSession {
-      Task.filter(_.projectId === projectRowId).length.run
+      TaskTable.filter(_.projectId === projectRowId).length.run
     }
     
     assert(numberOfTasks == 2, "Number of tasks assigned to project does not match")
