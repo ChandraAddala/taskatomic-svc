@@ -61,7 +61,7 @@ http://localhost:8080/users/cdivvela/projects/spacex-landing-pad/tasks/dock-carg
 | ----------------------------------------------------|:---------------------------------------------------------------------
 | GET: /users/:handle                                 | Gets user info for :handle   
 | GET: /users/:handle/all                             | Gets user info for :handle along with projects associated with the user. Trying to avoid extra hop with this call.  
-| GET: /users/:handle/projects                        | Gets all the projects associated with the user :handle. User should be either an owner on the project or have atleast has a task assigned to him/her on that project.
-| GET: /users/:handle/projects/:id                    | Gets project for :id associated with the user :handle. User should be either an owner on the project or have atleast has a task assigned to him/her on that project.
-| GET: /users/:handle/projects/:projectId/tasks       | Gets all tasks for project :projectId associated with the user :handle. User should be either an owner on the project or have atleast has a task assigned to him/her on that project.
-| GET: /users/:handle/projects/:projectId/tasks/:id   | Gets task for :id of project :projectId associated with the user :handle. User should be either an owner on the project or have atleast has a task assigned to him/her on that project.
+| GET: /users/:handle/projects                        | Gets all the projects associated with the user :handle. User should be either an owner on the project or atleast have a task assigned on that project.
+| GET: /users/:handle/projects/:id                    | Gets project for :id associated with the user :handle. User should be either an owner on the project or atleast have a task assigned on that project.
+| GET: /users/:handle/projects/:projectId/tasks       | Gets all tasks for project :projectId associated with the user :handle. User should be either an owner on the project or atleast have a task assigned on that project.
+| GET: /users/:handle/projects/:projectId/tasks/:id   | Gets task for :id of project :projectId associated with the user :handle. User should be either an owner on the project or atleast have a task assigned on that project.
