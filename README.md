@@ -53,4 +53,15 @@ The db is pre-loaded with some test data and can be accessed using the below url
 
 http://localhost:8080/users/cdivvela   
 http://localhost:8080/users/cdivvela/projects/spacex-landing-pad   
-http://localhost:8080/users/cdivvela/projects/spacex-landing-pad/tasks/dock-cargo-ship  
+http://localhost:8080/users/cdivvela/projects/spacex-landing-pad/tasks/dock-cargo-ship
+  
+### API detail  
+
+| URL's                                               | Description
+| ----------------------------------------------------|:---------------------------------------------------------------------
+| GET: /users/:handle                                 | Gets user info for :handle   
+| GET: /users/:handle/all                             | Gets user info for :handle along with projects associated with the user. Trying to avoid extra hop with this call.  
+| GET: /users/:handle/projects                        | Gets all the projects associated with the user :handle. User should be either an owner on the project or have atleast has a task assigned to him/her on that project.
+| GET: /users/:handle/projects/:id                    | Gets project for :id associated with the user :handle. User should be either an owner on the project or have atleast has a task assigned to him/her on that project.
+| GET: /users/:handle/projects/:projectId/tasks       | Gets all tasks for project :projectId associated with the user :handle. User should be either an owner on the project or have atleast has a task assigned to him/her on that project.
+| GET: /users/:handle/projects/:projectId/tasks/:id   | Gets task for :id of project :projectId associated with the user :handle. User should be either an owner on the project or have atleast has a task assigned to him/her on that project.

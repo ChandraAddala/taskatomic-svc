@@ -1,8 +1,7 @@
 package com.taskatomic.svc.controller
 
 import com.mchange.v2.c3p0.ComboPooledDataSource
-import com.taskatomic.svc.dto.UserDTO
-import com.taskatomic.svc.model.{Project, User, InitDBTrait}
+import com.taskatomic.svc.model.InitDBTrait
 import org.junit.runner.RunWith
 import org.scalatest.FunSuiteLike
 import org.scalatest.junit.JUnitRunner
@@ -78,9 +77,40 @@ class AppControllerTest extends ScalatraSuite with FunSuiteLike with InitDBTrait
     get ("/users/" + handle + "/all") {
       status should equal (200)
       response.mediaType should equal (Some("application/json"))
-//      User garima = new ObjectMapper().readValue(json, User.class);
-//      UserDTO userDTO =
-      println(body)
+      //TODO: Verify we got UserDTO and verify the number of projects associated to user.
+    }
+  }
+
+  test("should get 200: GET /users/:handle/projects") {
+
+    val handle: String = Random.nextInt().toString
+    val handle1: String = Random.nextInt().toString
+    val projectName: String = Random.nextInt().toString
+    val taskName: String = Random.nextInt().toString
+    val taskName1: String = Random.nextInt().toString
+    
+    createUser(db, handle, "Jason", "Borne")
+    createUser(db, handle1, "Jason1", "Borne1")
+    val projectId = createProject(db, handle, projectName)
+
+    val taskId = createTask(db, handle, projectId, taskName)
+    //create task and assign it to a person(handle1) other than owner(handle)
+    val taskId1 = createTask(db, handle1, projectId, taskName1)
+    
+    // getting projects of a user who has only one assigned 
+    // task but is not an owner of any project
+    get ("/users/" + handle1 + "/projects") {
+      status should equal (200)
+      response.mediaType should equal (Some("application/json"))
+      
+      //TODO: Verify size of the project array is 1
+    }
+
+    get ("/users/" + handle + "/projects") {
+      status should equal (200)
+      response.mediaType should equal (Some("application/json"))
+
+      //TODO: Verify size of the project array is 1
     }
   }
   

@@ -44,6 +44,12 @@ class AppController(db: Database) extends ScalatraServlet with ScalateSupport wi
       case None => NotFound("User not found")
     }
   }
+
+  get("/users/:user_handle/projects") {
+    val userHandle = params("user_handle")
+
+    servicesDao.getProjects(db, userHandle)
+  }
   
   get("/users/:user_handle/projects/:id") {
     val userHandle = params("user_handle")
@@ -55,6 +61,13 @@ class AppController(db: Database) extends ScalatraServlet with ScalateSupport wi
     }
   }
 
+  get("/users/:user_handle/projects/:projectId/tasks") {
+    val userHandle = params("user_handle")
+    val projectId = params("projectId").toInt
+
+    servicesDao.getTasks(db, userHandle, projectId)
+  }
+  
   get("/users/:user_handle/projects/:projectId/tasks/:id") {
     val userHandle = params("user_handle")
     val projectId = params("projectId").toInt
