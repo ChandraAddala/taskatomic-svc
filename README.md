@@ -52,8 +52,8 @@ java -jar services/build/libs/services-1.0-SNAPSHOT.jar
 The db is pre-loaded with some test data and can be accessed using the below urls when running the app for development purpose.
 
 http://localhost:8080/users/cdivvela   
-http://localhost:8080/users/cdivvela/projects/spacex-landing-pad   
-http://localhost:8080/users/cdivvela/projects/spacex-landing-pad/tasks/dock-cargo-ship
+http://localhost:8080/users/cdivvela/projects/1   
+http://localhost:8080/users/cdivvela/projects/1/tasks/1
   
 ### API detail  
 
