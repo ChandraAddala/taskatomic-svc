@@ -1,7 +1,7 @@
 import javax.servlet.ServletContext
 
 import com.mchange.v2.c3p0.{ComboPooledDataSource, PooledDataSource}
-import com.taskatomic.svc.servlet.ServicesServlet
+import com.taskatomic.svc.controller.AppController
 import org.scalatra.LifeCycle
 import org.slf4j.LoggerFactory
 
@@ -20,7 +20,7 @@ class ScalatraBootstrap extends LifeCycle{
     pooledDataSource = new ComboPooledDataSource
     val db = Database.forDataSource(pooledDataSource)
     
-    context.mount(new ServicesServlet(db), "/*")
+    context.mount(new AppController(db), "/*")
   }
 
   override def destroy(context: ServletContext) {
