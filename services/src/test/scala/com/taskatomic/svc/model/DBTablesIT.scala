@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory
 
 import scala.slick.driver.JdbcDriver.simple._
 import scala.slick.jdbc.JdbcBackend.Database
-import scala.slick.jdbc.JdbcBackend.Database.dynamicSession
 
 class DBTablesIT extends FunSuite with BeforeAndAfter with BeforeAndAfterAll with InitDBTrait{
 
@@ -22,13 +21,13 @@ class DBTablesIT extends FunSuite with BeforeAndAfter with BeforeAndAfterAll wit
   test ("Verify insertion of data into table User") {
 
     val testUserHandle = "test_user"
-    
-    db withDynSession {
+
+    db.withSession { implicit session =>
       UserTable.map(user => (user.handle, user.firstName, user.lastName))
           .insert(testUserHandle, Some("Jason"), Some("Borne"))
     }
     
-    val isUserPresent = db withDynSession {
+    val isUserPresent = db.withSession { implicit session =>
       UserTable.filter(_.handle === testUserHandle).run.nonEmpty
     }
 
@@ -40,8 +39,8 @@ class DBTablesIT extends FunSuite with BeforeAndAfter with BeforeAndAfterAll wit
 
     val testProjectName = "diwali_celeb"
     val testUserHandle = "test_user"
-    
-    db withDynSession {
+
+    db.withSession { implicit session =>
       UserTable.map(user => (user.handle, user.firstName, user.lastName))
         .insert( testUserHandle, Some("Jason"), Some("Borne"))
       
@@ -51,7 +50,7 @@ class DBTablesIT extends FunSuite with BeforeAndAfter with BeforeAndAfterAll wit
           .insert(testProjectName, userRowId.get)
     }
 
-    val isProjectPresent = db withDynSession {
+    val isProjectPresent = db.withSession { implicit session =>
       ProjectTable.filter(_.projectName === testProjectName).run.nonEmpty
     }
 
@@ -63,8 +62,8 @@ class DBTablesIT extends FunSuite with BeforeAndAfter with BeforeAndAfterAll wit
     val testProjectName = "diwali_celeb"
     val testUserHandle = "test_user"
     val testTaskName1 = "bring_sweets"
-    
-    db withDynSession {
+
+    db.withSession { implicit session =>
       UserTable.map(user => (user.handle, user.firstName, user.lastName))
         .insert( testUserHandle, Some("Jason"), Some("Borne"))
 
@@ -79,7 +78,7 @@ class DBTablesIT extends FunSuite with BeforeAndAfter with BeforeAndAfterAll wit
         .insert(testTaskName1, projectRowId.get, userRowId.get, userRowId.get, Some(0.0))
     }
 
-    val isTaskPresent = db withDynSession {
+    val isTaskPresent = db.withSession { implicit session =>
       TaskTable.filter(_.taskName === testTaskName1).run.nonEmpty
     }
 
@@ -94,8 +93,8 @@ class DBTablesIT extends FunSuite with BeforeAndAfter with BeforeAndAfterAll wit
     val testTaskName2 = "bring_crackers"
 
     var projectRowId: Option[Int] = None
-    
-    db withDynSession {
+
+    db.withSession { implicit session =>
       UserTable.map(user => (user.handle, user.firstName, user.lastName))
         .insert(testUserHandle, Some("Jason"), Some("Borne"))
 
@@ -113,7 +112,7 @@ class DBTablesIT extends FunSuite with BeforeAndAfter with BeforeAndAfterAll wit
         .insert(testTaskName2, projectRowId.get, userRowId.get, userRowId.get, Some(0.0))
     }
     
-    val numberOfTasks = db withDynSession {
+    val numberOfTasks = db.withSession { implicit session =>
       TaskTable.filter(_.projectId === projectRowId).length.run
     }
     
