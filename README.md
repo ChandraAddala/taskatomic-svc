@@ -65,3 +65,9 @@ http://localhost:8080/users/cdivvela/projects/spacex-landing-pad/tasks/dock-carg
 | GET: /users/:handle/projects/:id                    | Gets project for :id associated with the user :handle. User should be either an owner on the project or atleast have a task assigned on that project.
 | GET: /users/:handle/projects/:projectId/tasks       | Gets all tasks for project :projectId associated with the user :handle. User should be either an owner on the project or atleast have a task assigned on that project.
 | GET: /users/:handle/projects/:projectId/tasks/:id   | Gets task for :id of project :projectId associated with the user :handle. User should be either an owner on the project or atleast have a task assigned on that project.
+| POST: /users                                        | Creates a user.
+| PUT: /users/:handle                                 | Updates a user. Request has to contain the complete user object (not just the fields being updated)
+| POST: /users/:handle/projects                       | Creates a project with user handle being the owner.
+| PUT: /users/:handle/projects/:id                    | Updates the project with :id who has :handle as the owner. Request has to contain the complete project object (not just the fields being updated)
+| POST: /users/:handle/projects/:projectId/tasks      | Creates a task associated with project :projectId.
+| PUT: /users/:handle/projects/:projectId/tasks/:id   | Updates the task wth :id belonging to the project with :projectId. Request has to contain the complete task object (not just the fields being updated)

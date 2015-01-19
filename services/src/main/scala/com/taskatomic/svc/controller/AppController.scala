@@ -4,17 +4,20 @@ import com.taskatomic.svc.dao.AppDao
 import com.taskatomic.svc.dto.UserDTO
 import com.taskatomic.svc.model.{Task, Project, User}
 import org.json4s.{DefaultFormats, Formats}
-import org.scalatra.{InternalServerError, NotFound, ScalatraServlet}
+import org.scalatra._
 import org.scalatra.json.JacksonJsonSupport
 import org.scalatra.scalate.ScalateSupport
 import org.slf4j.LoggerFactory
 
 import scala.slick.jdbc.JdbcBackend.Database
 
-class AppController(db: Database) extends ScalatraServlet with ScalateSupport with JacksonJsonSupport {
+import org.json4s._
+import org.json4s.jackson.JsonMethods._
+
+class AppController(db: Database) extends ScalatraServlet with ScalateSupport with JacksonJsonSupport with MethodOverride {
 
   protected implicit val jsonFormats: Formats = DefaultFormats
-  implicit val servicesDao: AppDao = new AppDao(db)
+  implicit val appDao: AppDao = new AppDao(db)
   
   val logger = LoggerFactory.getLogger(getClass)
 
@@ -30,34 +33,66 @@ class AppController(db: Database) extends ScalatraServlet with ScalateSupport wi
   get("/users/:user_handle") {
     val userHandle = params("user_handle")
 
-    servicesDao.getUser(db, userHandle) match {
-      case Some(user: User) => user
-      case None => NotFound("User not found")
+    appDao.getUser(db, userHandle) match {
+      case Some(user: User) => Ok(user)
+      case _ => NotFound("User not found")
     }
   }
 
+  post("/users") {
+    val user: User = parse(request.body).extract[User]
+    
+    Created(appDao.saveUser(db, user))
+  }
+  
+  put("/users/:user_handle") {
+    val userHandle = params("user_handle")
+    val user: User = parse(request.body).extract[User]
+    
+    Ok(appDao.updateUser(db, userHandle, user))
+  }
+  
   get("/users/:user_handle/all") {
     val userHandle = params("user_handle")
 
-    servicesDao.getUser(db, userHandle) match {
-      case Some(user: User) =>  UserDTO(user, servicesDao.getProjects(db, userHandle))
-      case None => NotFound("User not found")
+    appDao.getUser(db, userHandle) match {
+      case Some(user: User) =>  Ok(UserDTO(user, appDao.getProjects(db, userHandle)))
+      case _ => NotFound("User not found")
     }
   }
 
   get("/users/:user_handle/projects") {
     val userHandle = params("user_handle")
 
-    servicesDao.getProjects(db, userHandle)
+    Ok(appDao.getProjects(db, userHandle))
+  }
+  
+  post("/users/:user_handle/projects") {
+    val userHandle = params("user_handle")
+    val project: Project = parse(request.body).extract[Project]
+    
+    try {
+      Created(appDao.saveProject(db, project, userHandle))
+    } catch {
+      case e: Exception => BadRequest(e.getMessage)
+    }
+  }
+
+  put("/users/:user_handle/projects/:id") {
+    val userHandle = params("user_handle")
+    val projectId = params("id").toInt
+    val project: Project = parse(request.body).extract[Project]
+
+    Ok(appDao.updateProject(db, projectId, project, userHandle))
   }
   
   get("/users/:user_handle/projects/:id") {
     val userHandle = params("user_handle")
     val projectId = params("id").toInt
     
-    servicesDao.getProject(db, userHandle, projectId) match {
-      case Some(project: Project) => project
-      case None => NotFound("Project not found")
+    appDao.getProject(db, userHandle, projectId) match {
+      case Some(project: Project) => Ok(project)
+      case _ => NotFound("Project not found")
     }
   }
 
@@ -65,7 +100,28 @@ class AppController(db: Database) extends ScalatraServlet with ScalateSupport wi
     val userHandle = params("user_handle")
     val projectId = params("projectId").toInt
 
-    servicesDao.getTasks(db, userHandle, projectId)
+    Ok(appDao.getTasks(db, userHandle, projectId))
+  }
+  
+  post("/users/:user_handle/projects/:projectId/tasks") {
+    val userHandle = params("user_handle")
+    val projectId = params("projectId").toInt
+    val task: Task = parse(request.body).extract[Task]
+    
+    try {
+      Created(appDao.saveTask(db, userHandle, projectId, task))
+    } catch {
+      case e: Exception => BadRequest(e.getMessage)
+    }
+  }
+
+  put("/users/:user_handle/projects/:projectId/tasks/:id") {
+    val userHandle = params("user_handle")
+    val projectId = params("projectId").toInt
+    val taskId = params("id").toInt
+    val task: Task = parse(request.body).extract[Task]
+
+    appDao.updateTask(db, userHandle, projectId, taskId, task)
   }
   
   get("/users/:user_handle/projects/:projectId/tasks/:id") {
@@ -73,9 +129,9 @@ class AppController(db: Database) extends ScalatraServlet with ScalateSupport wi
     val projectId = params("projectId").toInt
     val taskId = params("id").toInt
 
-    servicesDao.getTask(db, userHandle, projectId, taskId) match {
-      case Some(task: Task) => task
-      case None => NotFound("Task not found")
+    appDao.getTask(db, userHandle, projectId, taskId) match {
+      case Some(task: Task) => Ok(task)
+      case _ => NotFound("Task not found")
     }
   }
 
