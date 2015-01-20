@@ -33,10 +33,10 @@ cp services/src/main/db/taskatomic-db.mv.db ~/
 gradle clean build
 ```
 
-### Build executable jar
+### Build executable jar and zip for database configurations
 
 ```
-gradle clean build fatjar
+gradle clean build fatjar buildZip
 ```
 
 ### How to run the app
@@ -44,8 +44,18 @@ gradle clean build fatjar
 Run the build to create executable jar and complete instructions under setup. That should generate an executable jar file in ```services/build/libs/```. Execute the jar file using the below command.
  
 ```
-java -jar services/build/libs/services-1.0-SNAPSHOT.jar
+java -jar services/build/libs/services-1.0-SNAPSHOT.jar  
 ```
+
+### How to run the app by building a new database
+
+To build your own database, use database configurations in zip file located at ```database/build/distributions/database-1.0-SNAPSHOT.zip ```. Unzip the file and use the below command.  
+
+```
+sh flyway -url=jdbc:h2:file:~/taskatomic-db-flywaytest -user=root -password= clean migrate
+```
+
+TODO: Fill instructions to run the app using the newly created database.
 
 ### How to access the app
 
