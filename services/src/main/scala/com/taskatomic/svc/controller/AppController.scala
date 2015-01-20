@@ -41,8 +41,11 @@ class AppController(db: Database) extends ScalatraServlet with ScalateSupport wi
 
   post("/users") {
     val user: User = parse(request.body).extract[User]
-    
-    Created(appDao.saveUser(db, user))
+
+    appDao.getUser(db, user.handle) match {
+      case Some(user: User) => Ok(user)
+      case _ => Created(appDao.saveUser(db, user))
+    }
   }
   
   put("/users/:user_handle") {

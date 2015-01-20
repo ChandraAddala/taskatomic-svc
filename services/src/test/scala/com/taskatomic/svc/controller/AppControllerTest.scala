@@ -67,6 +67,26 @@ class AppControllerTest extends ScalatraSuite with FunSuiteLike with InitDBTrait
     
   }
 
+  test("should get 200: POST to create existing user /users") {
+    val handle: String = Random.nextInt().toString
+    createUser(db, handle, "Jason", "Borne")
+    
+    val requestBody: String =
+      """
+        |{"handle": "%s",
+        |"firstName":"x",
+        |"lastName":"y"}
+      """.stripMargin.format(handle)
+
+    post ("/users", requestBody, Map("Content-Type" -> "application/json")) {
+      status should equal (200)
+      val user: User = parse(body).extract[User]
+      assert(user.handle === handle, "handle does not match with the handle of user created")
+      assert(user.firstName === Some("Jason"), "handle does not match with the handle of user created")
+    }
+
+  }
+  
   test("should get 200: PUT to update user /users/:handle") {
     val handle: String = Random.nextInt().toString
     createUser(db, handle, "Jason", "Borne")
