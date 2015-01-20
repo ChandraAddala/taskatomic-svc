@@ -55,7 +55,11 @@ To build your own database, use database configurations in zip file located at `
 sh flyway -url=jdbc:h2:file:~/taskatomic-db-flywaytest -user=root -password= clean migrate
 ```
 
-TODO: Fill instructions to run the app using the newly created database.
+To run the app using the newly created database above
+
+```
+java -Dc3p0.jdbcUrl=jdbc:h2:file:~/taskatomic-db-flywaytest -jar services/build/libs/services-1.0-SNAPSHOT.jar
+```
 
 ### How to access the app
 
