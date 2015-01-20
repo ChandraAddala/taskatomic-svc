@@ -280,7 +280,7 @@ class AppControllerTest extends ScalatraSuite with FunSuiteLike with InitDBTrait
 
     //request with invalid project id
     post("/users/" + handle + "/projects/" + Random.nextInt() + "/tasks", requestBody, Map("Content-Type" -> "application/json")) {
-      status should equal (500)
+      status should equal (400)
     }
   }
   
